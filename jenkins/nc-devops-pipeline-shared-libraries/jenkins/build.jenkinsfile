@@ -1,0 +1,9 @@
+import org.jenkinsci.plugins.workflow.libs.Library
+
+@Library('nc-devops-pipeline-shared-libraries') _
+
+gradleBuildPipeline {
+    sonarqubeServerKey = 'NC-CENTRALIZED-SONARQUBE'
+    skipPublishing = true
+    useWrapper = true
+}

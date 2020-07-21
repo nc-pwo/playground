@@ -1,0 +1,30 @@
+loadLogFile([{
+    "package": "nc.devops.shared.library",
+    "name": "SampleSpockTest",
+    "start": 1562246332997,
+    "features": [
+        {
+            "name": "Successful test",
+            "start": 1562246332998,
+            "tags": [
+                {
+                    "name": "TEST-1:1,TEST-1:2",
+                    "key": "issue",
+                    "value": "TEST-1:1,TEST-1:2",
+                    "url": "TEST-1:1,TEST-1:2"
+                }
+            ],
+            "end": 1562246333020,
+            "result": "passed",
+            "attachments": [
+                
+            ]
+        }
+    ],
+    "end": 1562246333020,
+    "result": "passed",
+    "attachments": [
+        
+    ]
+}])
+

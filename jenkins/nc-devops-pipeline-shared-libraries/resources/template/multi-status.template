@@ -1,0 +1,133 @@
+<STYLE>
+  BODY, TABLE, TD, TH, P {
+    font-family: Calibri, Verdana, Helvetica, sans serif;
+    font-size: 12px;
+    color: black;
+  }
+  .console {
+    font-family: Courier New;
+  }
+  .filesChanged {
+    width: 10%;
+    padding-left: 10px;
+  }
+  .section {
+    width: 100%;
+    border: thin black dotted;
+  }
+  .tr-title {
+    background-color: <%= (build.result == null || build.result.toString() == 'SUCCESS') ? '#27AE60' : build.result.toString() == 'FAILURE' ? '#E74C3C' : '#f4e242' %>;
+  }
+  .td-title-main {
+    color: white;
+    font-size: 200%;
+    padding-left: 5px;
+    font-weight: bold;
+  }
+  .td-title {
+    color: white;
+    font-size: 120%;
+    font-weight: bold;
+    padding-left: 5px;
+    text-transform: uppercase;
+  }
+  .td-title-tests {
+    font-weight: bold;
+    font-size: 120%;
+  }
+  .tr-title-build {
+      background-color: #27AE60;
+  }
+  .th-build {
+    text-align: left;
+  }
+  .build {
+    padding-left: 20px;
+  }
+  .build-success {
+    color: #27AE60;
+  }
+  .build-failed {
+    color: #E74C3C;
+  }
+</STYLE>
+<BODY>
+  <!-- BUILD RESULT -->
+  <table class="section">
+    <tr class="tr-title">
+      <td class="td-title-main" colspan=2>
+        BUILD ${build.result ?: 'COMPLETED'}
+      </td>
+    </tr>
+    <tr>
+      <td>URL:</td>
+      <td><A href="${build.absoluteUrl}">${build.absoluteUrl}</A></td>
+    </tr>
+    <tr>
+      <td>Project:</td>
+      <td>${build.projectName}</td>
+    </tr>
+    <tr>
+      <td>Date:</td>
+      <td>${timestamp}</td>
+    </tr>
+    <tr>
+      <td>Duration:</td>
+      <td>${build.durationString}</td>
+    </tr>
+  </table>
+  <br/>
+
+  <!-- BUILD STATUSES -->
+  <%
+  if(buildResults != null && !buildResults.isEmpty()) { %>
+  <table class="section">
+    <tr class="tr-title-build">
+      <td class="td-title" colspan="5">SCHEDULED BUILD REPORT</td>
+    </tr>
+     <tr>
+      <th class="th-build">
+       Job
+      </th>
+      <th class="th-build">
+        Result
+      </th>
+      <th class="th-build">
+        Duration
+      </th>
+      <th class="th-build">
+        Stability
+      </th>
+      <th class="th-build">
+        Url
+      </th>
+    </tr>
+
+    <% buildResults.each() {
+    %>
+
+    <tr>
+      <td>
+        ${it.fullDisplayName}
+      </td>
+      <td <% if (it.result != "SUCCESS") print 'class="build-failed"' else print 'class="build-success"'  %> >
+        ${it.result}
+      </td>
+      <td>
+        ${it.durationString}
+      </td>
+      <td>
+        ${jobStability.get(it.getFullProjectName(), '')}
+      </td>
+      <td>
+        ${it.absoluteUrl}
+      </td>
+    </tr>
+
+    <%
+      }
+    }
+    %>
+  </table>
+  <br/>
+</BODY>

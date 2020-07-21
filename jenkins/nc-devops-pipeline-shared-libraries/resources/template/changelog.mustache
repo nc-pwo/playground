@@ -1,0 +1,15 @@
+{{#tags}}
+#**{{name}}**
+{{#issues}}
+{{^hasIssue}}
+##{{name}}
+{{/hasIssue}}
+
+{{#commits}}
+###{{{messageTitle}}}
+{{#messageBodyItems}}
+- {{.}}
+{{/messageBodyItems}}
+{{/commits}}
+{{/issues}}
+{{/tags}}

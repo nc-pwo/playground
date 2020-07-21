@@ -1,0 +1,34 @@
+package dslScripts
+
+pipelineJob(name) {
+    parameters{
+        stringParam('DELIVERY_AGENT','master')
+        stringParam('DELIVERY_CLUSTER','default')
+    }
+    description("Repo: ${gitUrl} \nPath: ${path} \nTask: ${task}\nCustom")
+    definition {
+        cpsScm {
+            scm {
+                git {
+                    remote {
+                        url(gitUrl)
+                        credentials(creds)
+                    }
+                    branch(branch)
+                    extensions {
+                        submoduleOptions {
+                            recursive(true)
+                            parentCredentials(true)
+                        }
+                    }
+                }
+            }
+            scriptPath("${path}/${task}.jenkinsfile")
+        }
+    }
+    triggers {
+        if (cronFormat) {
+            scm(cronFormat)
+        }
+    }
+}

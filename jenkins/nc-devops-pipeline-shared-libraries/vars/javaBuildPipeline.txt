@@ -1,0 +1,765 @@
+<style>
+    /* Styles for anchors without href. Negatively offset because of Jenkins header otherwise obscures clicked target. */
+    div.accelerators a:not([href]) {
+        display: block;
+        position: relative;
+        top: -50px;
+        visibility: hidden;
+    }
+
+    div.accelerators ul li {
+        margin-bottom: 15px;
+    }
+</style>
+
+<div class="accelerators">
+    <p>
+        The <code>javaBuildPipeline</code> is DevOps Accelerators way of implementing continuous delivery process for
+        java applications.<br>
+        If you are interested also how to configure Gradle and Maven files for <b>javaBuildPipeline</b>, please also
+        check out dedicated <a
+            href="https://source.netcompany.com/tfs/Netcompany/NCCGV001/_wiki/wikis/NCCGV001.wiki?wikiVersion=GBwikiMaster&pagePath=%2FEnd%252Duser%20Documentation%2FDevOps%20for%20Java%2FJavaBuildPipeline%20in%20your%20project&pageId=547">wikipage</a>.<br>
+        Fully configured javaBuildPipeline consists of:
+    <ul>
+        <li>
+            Cleaning the workspace
+        </li>
+        <li>
+            Executing the build task/goal
+        </li>
+        <li>
+            Running tests
+        </li>
+        <li>
+            Performing SonarQube analysis
+        </li>
+        <li>
+            Publishing created artifacts to Artifactory
+        </li>
+        <li>
+            Deploying application to one of deployment providers (Openshift, Kubernetes, more may be implemented in
+            the future), performing readiness checks and running integration tests.
+        </li>
+    </ul>
+    </p>
+    <p>
+        How to configure javaBuildPipeline?
+    </p>
+    <p>
+        <i><b>Note:</b> arguments for pipeline will have convention "&lt;variable_name&gt; : &lt;variable_type&gt;", to
+            get more information about given variable, just click it :)</i>
+    </p>
+
+    <p>
+    <dl>
+        <dt><b>javaBuildPipeline</b> {</dt>
+        <dd><a href="#javaBuild_jdk"><code>jdk</code></a> : String</dd>
+        <dd><a href="#javaBuild_buildToolType"><code>buildToolType</code></a> : BuildToolType, <b>mandatory
+            parameter</b></dd>
+        <dd><a href="#javaBuild_buildToolName"><code>buildToolName</code></a> : String</dd>
+        <dd><a href="#javaBuild_buildToolLoggingLevel"><code>buildToolLoggingLevel</code></a> : String</dd>
+        <dd><a href="#javaBuild_mavenSettingsConfig"><code>mavenSettingsConfig</code></a> : String</dd>
+        <dd><a href="#javaBuild_sonarProfile"><code>sonarProfile</code></a> : String</dd>
+        <dd><a href="#javaBuild_buildToolCustomClass"><code>buildToolCustomClass</code></a> : String</dd>
+        <dd><a href="#javaBuild_useWrapper"><code>useWrapper</code></a> : boolean</dd>
+        <dd><a href="#javaBuild_skipPublishing"><code>skipPublishing</code></a> : boolean</dd>
+        <dd><a href="#javaBuild_publishingFromNonMainBranchEnabled"><code>publishingFromNonMainBranchEnabled</code></a> : boolean</dd>
+        <dd><a href="#javaBuild_agentLabel"><code>agentLabel</code></a> : String
+        <dd><a href="#javaBuild_skipIntegrationTest"><code>skipIntegrationTest</code></a> : boolean</dd>
+        <dd><a href=" #javaBuild_publishingConfig">publishingConfig</a> : Map
+        </dd>
+        <dd><a href="#javaBuild_sonarqubeServerKey"><code>sonarqubeServerKey</code></a> : String</dd>
+        <dd><a href="#javaBuild_sonarqubeDisableWebhook"><code>sonarqubeDisableWebhook</code></a> : boolean</dd>
+        <dd><a href="#javaBuild_kubernetesPodTemplate"><code>kubernetesPodTemplate</code></a> : String</dd>
+        <dd><a href="#javaBuild_xray"><code>xray</code></a> : Map</dd>
+        <dd><a href="#javaBuild_mailRecipients"><code>mailRecipients</code></a> : List&lt;String&gt;</dd>
+        <dd><a href=" #javaBuild_cleaningStrategy"><code>cleaningStrategy</code></a> : Map
+        </dd>
+        <dd><a href="#javaBuild_continuousDelivery"><code>continuousDelivery</code></a> = Map</dd>
+        <dd><a href="#javaBuild_outerIntegrationTestsParams"><code>outerIntegrationTestsParams</code></a> = Map</dd>
+        <dd><a href="#javaBuild_integrationTestParams"><code>integrationTestParams</code></a> = Map</dd>
+        <dd><a href="#javaBuild_integrationTests"><code>integrationTests</code></a> = Map</dd>
+    </dl>
+    }
+    </p>
+    <br>
+    <dl>
+        <dt><code id="javaBuild_jdk">jdk</code></dt>
+        <dd>
+            <p>
+                Use to specify which version of JDK will be used in pipeline to build and test Java application.<br>
+                To see, what values may be used, check in your "Global Tools Configuration". In DevOps Accelerators
+                possible values are:
+            </p>
+            <ul>
+                <li>
+                    <b>Default</b> - openjdk 1.8.0 will be used if <i>jdk</i> will not be provided<br>
+                </li>
+                <li>
+                    <b>openjdk11</b> - openjdk 11.0.2<br>
+                </li>
+            </ul>
+        </dd>
+        <dt><code id="javaBuild_buildToolType">buildToolType</code></dt>
+        <dd>
+            <p>
+                Use to specify which build tool type should be used.<br>
+                Build tool type is a tool that will be used in pipeline to perform specific stages like build,
+                compile.<br>
+                Currently Gradle and Maven types are supported. In order to use one of them, you must import <code>import
+                nc.devops.shared.library.buildtool.BuildToolType</code> package in your Jenkinsfile and then use either:
+            </p>
+            <ul>
+                <li>
+                    <b>BuildToolType.GRADLE</b> - gradle will be used to perform logic defined in pipeline<br>
+                </li>
+                <li>
+                    <b>BuildToolType.MAVEN</b> - maven will be used to perform logic defined in pipeline<br>
+                </li>
+            </ul>
+        </dd>
+        <dt><code id="javaBuild_buildToolName">buildToolName</code></dt>
+        <dd>
+            <p>
+                Use to specify which version of build tool should be used.<br>
+                To see, what values may be used, check in your "Global Tools Configuration". In DevOps Accelerators
+                possible values are:</p>
+            <ul>
+                <li>
+                    <b>BuildToolType.GRADLE</b> - gradle will be used to perform logic defined in pipeline
+                    <ul>
+                        <li>
+                            <b>Default</b> - Gradle 4.6 will be used if no buildTooolName will be specified
+                        </li>
+                        <li>
+                            <b>4.10.2</b> - Gradle 4.10.2 will be used
+                        </li>
+                        <li>
+                            <b>5.0</b> - Gradle 5.0 will be used
+                        </li>
+                        <li>
+                            <b>5.6.4</b> - Gradle 5.6.4 will be used
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <b>BuildToolType.MAVEN</b> - maven will be used to perform logic defined in pipeline<br>
+                    <ul>
+                        <li>
+                            <b>Default</b> - Maven 3.5.3 will be used if no buildToolName will be specified
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </dd>
+        <dt><code id="javaBuild_buildToolLoggingLevel">buildToolLoggingLevel</code></dt>
+        <dd>
+            <p>
+                Optional parameter, which sets build tool logging verbosity. Available options are described below. <br>
+                For Gradle build tool:
+                <ul>
+                    <li>
+                        <b>INFO</b> - Sets additional <code>--info</code> flag, results in calling <code>gradle --info &lt;task&gt;</code>
+                    </li>
+                    <li>
+                       <b>WARN</b> - Sets additional <code>--warn</code> flag, results in calling <code>gradle --warn &lt;task&gt;</code>
+                    </li>
+                    <li>
+                       <b>DEBUG</b> - Sets additional <code>--debug</code> flag, results in calling <code>gradle --debug &lt;task&gt;</code>
+                    </li>
+                    <li>
+                       <b>QUIET</b> - Sets additional <code>--quiet</code> flag, results in calling <code>gradle --quiet &lt;task&gt;</code>
+                    </li>
+                </ul>
+
+            For Maven build tool:
+            <ul>
+                    <b>DEBUG</b> - Sets additional <code>--debug</code> flag, results in calling <code>mvn --debug &lt;task&gt;</code>
+                </li>
+                <li>
+                    <b>QUIET</b> - Sets additional <code>--quiet</code> flag, results in calling <code>mvn --quiet &lt;task&gt;</code>
+                </li>
+            </ul>
+            </p>
+        </dd>
+        <dt><code id="javaBuild_mavenSettingsConfig">mavenSettingsConfig</code></dt>
+        <dd>
+            <p>
+                Use to specify which ID of Maven configuration should be used (specify only when <code>buildToolType ==
+                BuildToolType.MAVEN</code>.<br>
+                To see, what values are present in your Jenkins, check "Manage Jenkins -> Managed Files" and there you
+                can see if any Maven settings are defined.<br>
+                To check, what settings are available in DevOps Accelerators Jenkins, please check our <a
+                    href="https://source.netcompany.com/tfs/Netcompany/NCCGV001/_git/nc-devops-jenkins-accelerators?path=%2Fsrc%2Fmain%2Fresources%2Fconfig%2Fjenkins.yaml&version=GBmaster&fullScreen=true">configuration</a>,
+                section "globalConfigFiles".
+        </dd>
+        <dt><code id="javaBuild_sonarProfile">sonarProfile</code></dt>
+        <dd>
+            <p>
+                The id of profile that was declared in the pom.xml file, it is required for Maven project which perform
+                static code analysis on SonarQube<br>
+                To check, how to correctly configure your pom.xml, please check <a
+                    href="https://docs.sonarqube.org/latest/analysis/scan/sonarscanner-for-maven">SonarQube
+                documentation</a>.
+            </p>
+        </dd>
+        <dt><code id="javaBuild_buildToolCustomClass">buildToolCustomClass</code></dt>
+        <dd>
+            <p>
+                Optional parameter, which needs to be passed if custom build tool should be used for performing specific
+                stages in pipeline (<code>buildToolType == BuildToolType.CUSTOM</code>).<br>
+                For example, if a user has defined in shared library a build Tool (which can be casted from from <code>Class&lt;BuildTool&gt;</code>)
+                and this tool has defined all the methods from <code>BuildTool</code> interface, then it will be
+                instantiated and used in this pipeline.
+            </p>
+        </dd>
+        <dt><code id="javaBuild_useWrapper">useWrapper</code></dt>
+        <dd>
+            <p>
+                Optional parameter, which (when set to <code>true</code>) will instruct Jenkins to use Gradle wrapper
+                instead of global build tool.<br>
+                By default, set to false (version from buildToolName will be taken into account).
+            </p>
+        </dd>
+        <dt><code id="javaBuild_skipPublishing">skipPublishing</code></dt>
+        <dd>
+            <p>
+                Optional parameter, by default set to <b>false</b>, which (when set to <code>true</code>) skips
+                publishing Artifacts to NC Centralized Artifactory.
+            </p>
+        </dd>
+        <dt><code id="javaBuild_publishingFromNonMainBranchEnabled">publishingFromNonMainBranchEnabled</code></dt>
+        <dd>
+            <p>
+                Optional parameter, by default set to <b>false</b>, which (when set to <code>true</code>) enables
+                publishing Artifacts to NC Centralized Artifactory from non-main branches.
+            </p>
+        </dd>
+        <dt><code id="javaBuild_agentLabel">agentLabel</code></dt>
+        <dd>
+            Optional parameter, by default set to <b>"master"</b>, when <i>KUBERNETES_MODE_ENABLED</i> is set to <code>false</code>.<br>
+            When specified, CI steps will be performed on this specific agent.<br>
+            The hierarchy of setting agent label is:
+            <ul>
+                <li>
+                    <i>agentLabel</i> in Jenkinsfile
+                </li>
+                <li>
+                    if <i>KUBERNETES_MODE_ENABLED</i> is set to <code>true</code> then value of "kubernetesPodTemplate"
+                </li>
+                <li>
+                    if <i>KUBERNETES_MODE_ENABLED</i> is set to <code>true</code> and value of "kubernetesPodTemplate"
+                    is not present then value of system environment variable "KUBERNETES_AGENT_LABEL" is being used
+                </li>
+                <li>
+                    otherwise label <i>master</i> is used
+                </li>
+            </ul>
+        </dd>
+        <dt><code id="javaBuild_skipIntegrationTest">skipIntegrationTest</code> DEPRECATED - use
+            <code>integrationTests</code> instead
+        </dt>
+        <dd>
+            <p>
+                Optional parameter, by default set to <b>false</b>. If set to <code>true</code> and <code>integrationTestsParams
+                is defined</code>, stage
+                <i>integration tests</i> in <i>Continuous Delivery</i> will be skipped.
+            </p>
+        </dd>
+        <dt><code id="javaBuild_publishingConfig">publishingConfig</code></dt>
+        <dd>
+            <p>
+                A map, which configures how and where Artifacts (jars, wars, images, zips, etc) should be published.<br>
+                For pushing Artifacts Maven <i>publishing</i> plugin is being used. For some examples, how to configure
+                your <i>build.gradle</i> please check our <a
+                    href="https://source.netcompany.com/tfs/Netcompany/NCCGV001/_wiki/wikis/NCCGV001.wiki?wikiVersion=GBwikiMaster&pagePath=%2FEnd%252Duser%20Documentation%2FDevOps%20for%20Java%2FJavaBuildPipeline%20in%20your%20project&pageId=547">wiki</a>.
+                DevOps Accelerators have prepared default publishing config to Artifactory specified in Jenkins <i>Global
+                Tool Configuration</i>.<br>
+                If you want to change this behaviour your need to provide entire map with configuration.<br>
+                The variables, their meaning and default values are:
+            </p>
+            <ul>
+                <li>
+                    <b>credentials</b> - ID of Jenkins credentials which should be used in publishing. Note: credentials
+                    should have username and passphrase (or private key)
+                </li>
+                <li>
+                    <b>serverId</b> - ID of Artifactory Server, to see what Artifactory servers are available go to
+                    "Manage Jenkins -> Configure System" and find <i>Artifactory servers</i>
+                </li>
+                <li>
+                    <b>repoType</b> - type of repository that will be used in publishing. Currently, two types are
+                    supported: <i>RepoType.ARTIFACTORY</i> and <i>RepoType.GENERIC</i>.<br>
+                    Note: in order to use RepoType, please import <i>import
+                    nc.devops.shared.library.artifacts.RepoType</i> in your Jenkinsfile.
+                </li>
+                <li>
+                    <b>prefixBuildInfoName</b> - a prefix for <i>build info</i>. Without it, the build metadata will not
+                    be published in Artifactory.<br>
+                    For more information what is build info, please check <a
+                        href="https://jfrog.com/knowledge-base/what-is-the-new-artifactory-build-info-repository-and-how-do-i-configure-permissions-to-it/">this
+                    site</a>.
+                </li>
+            </ul>
+            <p>
+                DevOps Accelerators have implemented deeper integration between the Jenkins Job that executed the
+                pipeline
+                and Jenkins itself.<br>
+                What has been done is that if no <i>publishingConfig</i> is specified then the first configuration of
+                Artifactory server from Jenkins configuration page will be taken and used.
+            </p>
+        </dd>
+        <dt><code id="javaBuild_sonarqubeServerKey">sonarqubeServerKey</code></dt>
+        <dd>
+            <p>
+                The name of SonarQube server that will be used to perform analysis.<br>
+                Presence of this parameter enables <i>SonarQube Analysis</i> stage.<br>
+                Available SonarQube servers may be found in Jenkins configuration, under "SonarQube servers -> SonarQube
+                installations -> name"
+            </p>
+        </dd>
+        <dt><code id="javaBuild_sonarqubeDisableWebhook">sonarqubeDisableWebhook</code></dt>
+        <dd>
+            <p>
+                By default, set to <code>true</code>. If turned off, SonarQube integration will depend on SonarQube <a
+                    href="https://docs.sonarqube.org/latest/project-administration/webhooks/">webhooks</a>.<br>
+                DevOps Accelerators have implemented an option to skip creation of webhook and use integrated within
+                SonarQube plugin methods.
+            </p>
+        </dd>
+        <dt><code id="javaBuild_kubernetesPodTemplate">kubernetesPodTemplate</code></dt>
+        <dd>
+            <p>
+                If system environment variable <i>KUBERNETES_MODE_ENABLED</i> is set to <code>true</code>, then it is
+                possible to override which agent will be running the pipeline.<br>
+                If this value is absent, then the value of system variable <i>KUBERNETES_AGENT_LABEL</i> is used as
+                default.
+            </p>
+        </dd>
+        <dt><code id="javaBuild_xray">xray</code></dt>
+        <dd>
+            <p>
+                If present, test results will be published to JIRA as Test Execution Issues.<br>
+                To see xray step documentation, please check <a href="#publishXrayReport">publishXrayReport</a>.<br>
+                To see real life working Jenkinsfile <a
+                    href="https://source.netcompany.com/tfs/Netcompany/NCCGV001/_git/nc-devops-hello-world?path=%2Fjenkins%2FxrayBuild.jenkinsfile&version=GBmaster">xrayBuild.jenkinsfile</a>.<br>
+                To get some information about Xray configuration please check our <a
+                    href="https://source.netcompany.com/tfs/Netcompany/NCCGV001/_wiki/wikis/NCCGV001.wiki?wikiVersion=GBwikiMaster&pagePath=%2FEnd%252Duser%20Documentation%2FDevOps%20for%20Java%2FTest%20Reporting&pageId=557">wiki</a>.
+            </p>
+        </dd>
+        <dt><code id="javaBuild_mailRecipients">mailRecipients</code></dt>
+        <dd>
+            <p>
+                If present, once the pipeline has failed an email will be created and sent to each person specified.
+            </p>
+        </dd>
+        <dt><code id="javaBuild_cleaningStrategy">cleaningStrategy</code></dt>
+        <dd>
+            <p>
+                A map, which configures Log Rotation - a feature that discards jobs according to specified strategy.
+            </p>
+            <ul>
+                <li>
+                    <b>artifactDayToKeep</b> : int - Specifies how many days artifacts from the jobs should be kept.<br>
+                    If not present, system variable "LOG_ROTATE_ARTIFACT_DAY_TO_KEEP" can be set and that value will be
+                    used in all build pipelines.
+                </li>
+                <li>
+                    <b>artifactNumToKeep</b> : int - Specifies how many artifacts from the jobs should be kept.<br>
+                    If not present, system variable "LOG_ROTATE_ARTIFACT_NUM_TO_KEEP" can be set and that value will be
+                    used in all build pipelines.
+                </li>
+                <li>
+                    <b>numToKeep</b> : int - Specifies how many days the jobs should be kept.<br>
+                    If not present, system variable "LOG_ROTATE_DAY_TO_KEEP" can be set and that value will be used in
+                    all build pipelines.
+                </li>
+                <li>
+                    <b>daysToKeep</b> : int - Specifies how many jobs should be kept.<br>
+                    If not present, system variable "LOG_ROTATE_NUM_TO_KEEP" can be set and that value will be used in
+                    all build pipelines.
+                </li>
+            </ul>
+        </dd>
+        <dt><code id="javaBuild_continuousDelivery">continuousDelivery</code></dt>
+        <dd>
+            <p>
+                A map, which configures continuous delivery process. In DevOps Accelerators way the stages that are
+                being run as the part of this process are: "Create Project", "Deploy Application", "Verify Readiness of
+                Application", "Run Integration Test" and optional "Idle Application"
+            </p>
+            <ul>
+                <li>
+                    <b>idleAfterSuccess</b> : boolean - by default false. If true, application will be idled in stage
+                    "Idle application"
+                </li>
+                <li>
+                    <b>defaultTimeout</b> : int - by default 5 minutes. Specifies how long
+                    Openshift/Kubernetes/Deployment Provider should wait in "Verify Readiness" stage, until job will be
+                    marked as failed.
+                </li>
+                <li>
+                    <b>projectName</b> : String - by default job name will be taken and prefix <i>build_</i> will be
+                    added. This name will be used by deployment provider - it will try to deploy application to the
+                    namespace/environment with that name and create deployment provider specific resources with that
+                    name.
+                </li>
+                <li>
+                    <b>deploymentParameters</b> : List&lt;String&gt; - by default []. It may be used to provide
+                    additional parameters for Openshift's template
+                    or Kubernetes Helm Chart.
+                </li>
+                <li>
+                    <b>kubernetesCluster</b> : Map - defines configuration for <i>kubernetes-cli-plugin</i>, which are
+                    being used to access Kubernetes cluster. It's variables and default values are:
+                    <ul>
+                        <li>
+                            <b>credentialsId</b> : String - ID of Jenkins credentials, that will be used to access
+                            cluster. By default, it is a value of system environment variable "KUBERNETES_SA_TOKEN". If
+                            this is not present, then value "aks-token" is being used.
+                        </li>
+                        <li>
+                            <b>serverUrl</b> : String - String matching url of Kubernetes cluster. By default, it is a
+                            value of system environment variable "KUBERNETES_CLUSTER_URL". If this is not present, then
+                            value "https://accelerators-aks-dns-8c106221.hcp.uksouth.azmk8s.io:443" is being used.
+                        </li>
+                        <li>
+                            <b>namespace</b> : String - Name of namespace, where the service account token was created.
+                            By default, it is a value of system environment variable "KUBERNETES_SA_NAMESPACE". If this
+                            is not present, then value "dev" is being used.
+                        </li>
+                        <li>
+                            <b>caCertificate</b> : String - Cluster Certificate Authority used to validate the API
+                            server's certificate. By default, it is a value of system environment variable
+                            "KUBERNETES_CA_CERT".
+                        </li>
+                        <li>
+                            <b>clusterName</b> : String - Name of the generated Cluster configuration. By default, it is
+                            a value of system environment variable "KUBERNETES_CLUSTER_NAME". If this is not present,
+                            then value "k8s" is being used.
+                        </li>
+                        <li>
+                            <b>serverUrl</b> : String - Name of the generated Context configuration. By default, it is a
+                            value of system environment variable "KUBERNETES_CONTEXT_NAME". If this is not present, then
+                            value "k8s" is being used.
+                        </li>
+                    </ul>
+                    For more information about kubernetes-cli-plugin, reach out to their guthub <a
+                        href="https://github.com/jenkinsci/kubernetes-cli-plugin">page</a>
+                </li>
+                <li>
+                    <b>deliveryCluster</b> : String - It is possible to run continuous delivery stages on different
+                    cluster. In order to achieve this, you need to either:
+                    <ul>
+                        <li>
+                            Specify parameter DELIVERY_CLUSTER
+                        </li>
+                        <li>
+                            Set appropriate deliveryCluster in your pipelineConfig
+                        </li>
+                        <li>
+                            Set system environment variable DEFAULT_CLUSTER
+                        </li>
+                    </ul>
+                    Note: if you are deploying to OpenShift cluster, you must also add this cluster in Jenkins
+                    configuration
+                </li>
+                <li>
+                    <b>deploymentProviderType</b> : String - By default, set to <i>OPENSHIFT</i>. This value instruct
+                    Jenkins what deployment platform should be used in continuous delivery stages (except creation and
+                    deletion - this is handled by projectManagementProvider).<br>
+                    Currently two options for build pipeline are implemented:
+                    <ul>
+                        <li>
+                            <b>OPENSHIFT</b> - Openshift is being used as a platform which manages application
+                            deployment and its lifecycle.<br>
+                        </li>
+                        <li>
+                            <b>KUBERNETES_WITH_HELM</b> - Kubernetes is being used as a platform and Helm 3.0 is being
+                            used as a tool, which manage application deployment and its lifecycle.<br>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <b>projectManagementProvider</b> : String - By default, set to <i>OPENSHIFT_BUILD_WITHOUT_JENKINS_LOCK</i>.
+                    This value instruct Jenkins how to treat projects/namespaces.<br>
+                    Currently two options for build pipeline are implemented:
+                    <ul>
+                        <li>
+                            <b>OPENSHIFT_BUILD_WITHOUT_JENKINS_LOCK</b> - Openshift is being used as a platform which
+                            decides about project management.<br>
+                            In this case <i>continuousDelivery.projectName</i> will be the name of project, where the
+                            application will be deployed.<br>
+                            There are no locks acquired on that resource, so multiple jobs can deploy to it
+                            simultaneously.<br>
+                            Project will not be deleted.
+                        </li>
+                        <li>
+                            <b>KUBERNETES_BUILD_WITHOUT_JENKINS_LOCK</b> - Kubernetes is being used as a platform which
+                            decides about namespace management.<br>
+                            In this case <i>continuousDelivery.projectName</i> will be the name of namespace, where the
+                            application will be deployed.<br>
+                            There are no locks acquired on that resource, so multiple jobs can deploy to it
+                            simultaneously.<br>
+                            Namespace will not be deleted.
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <b>templateProcessingTool</b> : String - By default, set to <i>OC</i>. This value instruct Jenkins
+                    what tool/plugin should be used to process provided templates/helm charts.<br>
+                    Currently two options for build pipeline are implemented:
+                    <ul>
+                        <li>
+                            <b>OC</b> - Openshift Client is being used as a tool which processes templates.<br>
+                        </li>
+                        <li>
+                            <b>HELM</b> - Helm 3.0 is being used as a tool which processes helm charts.<br>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <b>forceDeployment</b> : boolean - Useful parameter when multibranch build pipeline is being used
+                    with continuous delivery. If this value is set to <code>true</code> then continuous delivery steps
+                    will be performed from each branch.
+                </li>
+                <b>Note: deploymentProviderType, projectManagementProvider and templateProcessingTool are strongly
+                    correlated, to see, what combinations are allowed, please check our <a
+                            href="https://source.netcompany.com/tfs/Netcompany/NCCGV001/_wiki/wikis/Release%20Notes?wikiVersion=GBmaster&pagePath=%2Fnc_devops_pipeline_shared_libraries%2FRelease%20Notes&pageId=869&anchor=%F0%9F%93%A6-upgrade-guide">upgrade
+                        guide</a>.</b>
+            </ul>
+        </dd>
+        <dt><code id="javaBuild_outerIntegrationTestsParams">outerIntegrationTestsParams</code> DEPRECATED - use <code>integrationTests</code>
+            instead
+        </dt>
+        <dd>
+            <p>
+                Configuration map for running integration tests using integrationTest placed in different repository
+                than the application that you’re building. Map keys are:
+            </p>
+            <ul>
+                <li>
+                    <b>integrationTestsDir</b> – by default ',', name of the directory where the repository with tests
+                    should be cloned
+                </li>
+                <li>
+                    <b>integrationTestsRepoUrl</b> – URL of repository with tests
+                </li>
+                <li>
+                    <b>integrationTestsRepoCredentials</b> – Jenkins Credentials to the repository
+                </li>
+                <li>
+                    <b>integrationTestsRepoBranch</b> – branch to clone
+                </li>
+            </ul>
+        </dd>
+        <dt><code id="javaBuild_integrationTestParams">integrationTestParams</code> DEPRECATED - use <code>integrationTests</code>
+            instead
+        </dt>
+        <dd>
+            <p>
+                If defined, integrationTest task will be used. If you want to pass some properties to integrationTest
+                gradle task, this is the parameter, which lets you do so. You can provide list of properties here.<br>
+                Each property is a map containing following keys
+            </p>
+            <ul>
+                <li>
+                    <b>propertyType</b> – ‘P’ for project property or ‘D’ for system property
+                </li>
+                <li>
+                    <b>propertyName</b> – name of the property
+                </li>
+                <li>
+                    <b>propertyValue</b> – value of the property
+                </li>
+                <li>
+                    <b>appHostForValue</b> – set to true if the property is an appUrl
+                </li>
+            </ul>
+        </dd>
+        <dt><code id="javaBuild_integrationTests">integrationTests</code></dt>
+        <dd>
+            <p>
+                Note: if <code>integrationTests</code> variable is not defined, old
+                configuration approach will be used.
+                If present, <code>integrationTestParams</code>, <code>skipIntegrationTest</code>,
+                <code>outerIntegrationTestsParams</code> will be ignored.
+            </p>
+            <p>
+                Optional configuration map for integration tests. Map can contain parameters described below.
+                If provided Map is empty, no test will be run.
+            </p>
+            <ul>
+                <li>
+                    <b>publicApi</b> : Map - Optional entry, if defined public Api integration tests stage will be run.
+                    Tests are run on continuous delivery agent. Available parameters
+                    <ul>
+                        <li>
+                            <b>skip</b> : boolean - optional parameter, default set to <code>false</code>. If set to
+                            <code>true</code> - tests will be skipped
+                        </li>
+                        <li>
+                            <b>parameters</b> : List&lt;Map&gt; - optional list of parameters. Each parameter is
+                            represented as a Map with following keys
+                            <ul>
+                                <li>
+                                    <b>propertyType</b> : String - 'P' for project property or 'D' for system property
+                                </li>
+                                <li>
+                                    <b>propertyName</b> : String - name of the property
+                                </li>
+                                <li>
+                                    <b>propertyValue</b> : String - value of the property
+                                </li>
+                                <li>
+                                    <b>appHostForValue</b> : boolean - optional, set to true if the property is an
+                                    appUrl
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
+                            <b>externalSource</b> : Map - optional parameter, configuration map for running integration
+                            tests placed in different repository than the application that you’re building.
+                            Map keys are:
+                            <ul>
+                                <li>
+                                    <b>cloneDirectory</b> : String - name of the directory where the repository with
+                                    tests should be cloned
+                                </li>
+                                <li>
+                                    <b>url</b> : String – URL of repository with tests
+                                </li>
+                                <li>
+                                    <b>credentials</b> : String – Jenkins Credentials to the repository
+                                </li>
+                                <li>
+                                    <b>branch</b> : String – branch to clone
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <b>internalApi</b> : Map - Optional entry, if defined internal Api integration tests stage will be
+                    run. Tests are run in agent inside project namespace. Available parameters
+                    <ul>
+                        <li>
+                            <b>skip</b> : boolean - optional parameter, default set to <code>false</code>. If set to
+                            <code>true</code> - tests will be skipped
+                        </li>
+                        <li>
+                            <b>agentInheritFrom</b> : String -
+                            by default set to <code>"Kubernetes"</code>.
+                            Specifies which pod template should be used as a base for Jenkins agent that will be
+                            deployed in stage
+                            "Internal Api Integration Tests".<br>
+                            Those agents should be defined in Jenkins Configuration As Code and can be found in section
+                            "Manage Jenkins->Configure system->Cloud"
+                        </li>
+                        <li>
+                            <b>agentServiceAccount</b> : String -
+                            by default set to <code>"builder"</code>.
+                            specifies which service account should be used when deploying Jenkins agent that will be
+                            deployed in stage
+                            "Internal Api Integration Tests".<br>
+                            Note: this is the service account of the project/namespace where BPPR is being performed.
+                            Not where Jenkins master is being hosted.
+                        </li>
+                        <li>
+                            <b>parameters</b> : List&lt;Map&gt; - optional list of parameters. Each parameter is
+                            represented as a Map with following keys
+                            <ul>
+                                <li>
+                                    <b>propertyType</b> : String - 'P' for project property or 'D' for system property
+                                </li>
+                                <li>
+                                    <b>propertyName</b> : String - name of the property
+                                </li>
+                                <li>
+                                    <b>propertyValue</b> : String - value of the property
+                                </li>
+                                <li>
+                                    <b>appHostForValue</b> : boolean - optional, set to true if the property is an
+                                    appUrl
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
+                            <b>externalSource</b> : Map - optional parameter, configuration map for running integration
+                            tests placed in different repository than the application that you’re building.
+                            Map keys are:
+                            <ul>
+                                <li>
+                                    <b>cloneDirectory</b> : String - name of the directory where the repository with
+                                    tests should be cloned
+                                </li>
+                                <li>
+                                    <b>url</b> : String – URL of repository with tests
+                                </li>
+                                <li>
+                                    <b>credentials</b> : String – Jenkins Credentials to the repository
+                                </li>
+                                <li>
+                                    <b>branch</b> : String – branch to clone
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <b>component</b> : Map - Optional entry, if defined component tests stage will be run. Tests are run
+                    on user defined agent. Available parameters
+                    <ul>
+                        <li>
+                            <b>agentLabel</b> : String - optional parameter, Defines agent on which stage is executed.
+                            Default value is same as <a href="#javaBuild_agentLabel"><code>agentLabel</code></a>.
+                        </li>
+                        <li>
+                            <b>skip</b> : boolean - optional parameter, default set to <code>false</code>. If set to
+                            <code>true</code> - tests will be skipped
+                        </li>
+                        <li>
+                            <b>parameters</b> : List&lt;Map&gt; - optional list of parameters. Each parameter is
+                            represented as a Map with following keys
+                            <ul>
+                                <li>
+                                    <b>propertyType</b> : String - 'P' for project property or 'D' for system property
+                                </li>
+                                <li>
+                                    <b>propertyName</b> : String - name of the property
+                                </li>
+                                <li>
+                                    <b>propertyValue</b> : String - value of the property
+                                </li>
+                                <li>
+                                    <b>appHostForValue</b> : boolean - optional, set to true if the property is an
+                                    appUrl
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
+                            <b>externalSource</b> : Map - optional parameter, configuration map for running integration
+                            tests placed in different repository than the application that you’re building.
+                            Map keys are:
+                            <ul>
+                                <li>
+                                    <b>cloneDirectory</b> : String - name of the directory where the repository with
+                                    tests should be cloned
+                                </li>
+                                <li>
+                                    <b>url</b> : String – URL of repository with tests
+                                </li>
+                                <li>
+                                    <b>credentials</b> : String – Jenkins Credentials to the repository
+                                </li>
+                                <li>
+                                    <b>branch</b> : String – branch to clone
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </dd>
+    </dl>
+</div>

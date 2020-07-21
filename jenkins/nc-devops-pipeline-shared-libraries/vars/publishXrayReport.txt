@@ -1,0 +1,41 @@
+<b>Jira <-> Jenkins integration</b>
+<br>
+The <b>publishXrayReport</b> step publishes tests executions results into configured Jira project.
+<br>
+To ensure step's correct execution following line should be added inside 'always' node in the pipeline:
+<br>
+<code>
+post {<br>
+            failure {<br>
+            _omitted for brevity_<br>
+            }<br>
+            always{<br>
+                publishXrayReport(pipelineConfig?.xray)<br>
+            }
+        }<br>
+</code>
+<br>
+and in the pipeline's call:
+<br>
+<code>
+pipeline {<br>
+    xray = [jiraProjectKey: 'projectKey',<br>
+            xrayCredentialsId : 'xray-credentials',<br>
+            baseXrayUrl       : 'https://xray.cloud.xpand-it.com/',<br>
+            baseXrayUrlSuffix : 'api/v1',<br>
+            baseJiraUrl       : 'https://some-name.atlassian.net',<br>
+            loggingEnabled: true,<br>
+            tests         : [<br>
+                    [resultsPath: 'path-to-test-results',<br>
+                     runnerType : 'JUNIT'],<br>
+                    [resultsPath: 'path-to-spock-report-file',<br>
+                     runnerType : 'SPOCK']<br>
+            ]
+    ]
+}<br>
+</code>
+Moreover the *xrayCredentialsId* parameter should be supplied with id of xray credentials stored in Jenkins. <br>
+Step will automatically fetch those credentials and use them to authenticate in Xray.<br>
+In order for step to successfully import tests executions a valid jira project key should be provided.<br>
+<br>
+Additionally one may also configure logging of individual requests and responses through *loggingEnabled* parameter, which,by default, is disabled.

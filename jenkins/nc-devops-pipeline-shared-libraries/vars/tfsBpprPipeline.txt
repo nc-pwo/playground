@@ -1,0 +1,37 @@
+tfsBpprPipeline {
+    sonarqubeServerKey : String
+    sonarqubeDisableWebhook : boolean = true
+    directory: String = '.'
+    continuousDelivery = [
+        projectName: String = 'nc-devops-hello-world',
+        projectNameSuffix: String = 'bppr',
+        projectNameDelimiter: String = '-',
+        applicationName: String = 'hello-world',
+        manualTest: Boolean = false,
+        deleteAfterSuccess: Boolean = true,
+        defaultTimeOut: Integer = 5,
+        templatePath: String,
+        credentialParameters: Array = [] // replace credential in Jenkins to parameters in yaml file
+            Types of credentialParameters:
+            - usernamePassword: this.credentials.usernamePassword("credId", "DEFAULT_REPO_USERNAME", "DEFAULT_REPO_PASSWORD")
+            - string: this.credentials.string("credId", "SECRET_STRING")
+            - file: this.credentials.file("credId", "PATH_TO_FILE")
+        hasCredential: boolean = true //if there is credentialParameters
+        credentials value to parameters in template.yml when deploy
+        deploymentParameters: Array = [], // Allow to customize template parameters' value
+        requiredComponents: Array of Maps,
+        integrationTestWithKubernetes: Boolean = false,
+    ]
+    /* List of parameters of gradle integrationTest task */
+    /* Example below will result in executing: */
+    /* gradle integrationTest -PappUrl=http://wildfly-with-app-1-alko-poc.40.113.68.97.nip.io*/
+    integrationTestParams = [
+        integrationTestParams = [
+            [propertyType   : String = 'P',
+             propertyName   : String = 'appUrl',
+             propertyValue  : String = wildfly-with-app-1,
+             appHostForValue: boolean = true
+            ]
+        ]
+    ]
+}

@@ -1,0 +1,20 @@
+pluginManagement {
+    repositories {
+        maven {
+            url "$pluginRepositoryURL/$snapshotsRepositoryName"
+            credentials {
+                username "$pluginRepositoryUser"
+                password "$pluginRepositoryPassword"
+            }
+        }
+        maven {
+            url "$pluginRepositoryURL/$releasesRepositoryName"
+            credentials {
+                username "$pluginRepositoryUser"
+                password "$pluginRepositoryPassword"
+            }
+        }
+        gradlePluginPortal()
+    }
+}
+rootProject.name = 'pipeline-shared-libraries'
