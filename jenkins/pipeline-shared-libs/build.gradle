@@ -1,0 +1,68 @@
+plugins {
+    id "com.mkobit.jenkins.pipelines.shared-library" version "0.10.1"
+    id "org.sonarqube" version "2.7.1"
+    id 'jacoco'
+    id 'pl.allegro.tech.build.axion-release' version '1.11.0'
+}
+
+scmVersion {
+    versionIncrementer 'incrementMinor'
+    ignoreUncommittedChanges = false
+}
+
+apply plugin: 'groovy'
+
+wrapper {
+    distributionType = Wrapper.DistributionType.ALL
+    gradleVersion = '5.6.4'
+}
+
+dependencies {
+    compile 'com.netcompany.devops:pipeline-shared-libraries:5.2.1'
+    compile 'org.codehaus.groovy:groovy-all:2.4.11'
+    compile 'org.jenkins-ci.plugins.workflow:workflow-cps-global-lib:2.9@jar'
+    compile 'org.jenkins-ci.plugins:pipeline-utility-steps:2.1.0@jar'
+    compile 'org.jenkins-ci.plugins:artifactory:3.4.1'
+    compile 'org.jenkins-ci.plugins:artifactory:3.4.1@jar'
+    compile 'org.codehaus.groovy.modules.http-builder:http-builder:0.7.1'
+    compile 'org.jenkins-ci.plugins:plain-credentials:1.5@jar'
+    compile 'org.jenkins-ci.plugins:sonar:2.9@jar'
+    compile 'org.jenkins-ci.plugins:job-dsl:1.76@jar'
+    compile 'org.sonarsource.sonarqube:sonar-ws:7.7'
+    testCompile 'org.junit.jupiter:junit-jupiter-params:5.5.2'
+    testCompile 'org.junit.jupiter:junit-jupiter-api:5.5.2'
+    testCompile 'org.junit.vintage:junit-vintage-engine:5.5.0'
+    testCompile 'org.mockito:mockito-core:2.23.4'
+    testCompile 'org.mockito:mockito-junit-jupiter:2.23.4'
+    testCompile 'org.powermock:powermock-api-mockito2:2.0.2'
+    testCompile 'org.powermock:powermock-module-junit4:2.0.2'
+    testCompile 'org.powermock:powermock-core:2.0.2'
+    testCompile 'org.powermock:powermock-module-junit4-rule:2.0.2'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.5.2'
+}
+
+test {
+    useJUnitPlatform()
+
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
+
+    testLogging.showStandardStreams = true
+    testLogging.exceptionFormat = 'full'
+}
+
+task codeCoverageReport(type: JacocoReport) {
+    executionData fileTree(project.rootDir.absolutePath).include("**/build/jacoco/*.exec")
+    sourceSets sourceSets.main
+    reports {
+        xml.enabled true
+        xml.destination file("${buildDir}/reports/jacoco/report.xml")
+    }
+}
+
+codeCoverageReport.dependsOn(test)
+
+project.tasks.remove(project.tasks.findByName('sourcesJar'))
+group = projectGroup
+project.version = scmVersion.version

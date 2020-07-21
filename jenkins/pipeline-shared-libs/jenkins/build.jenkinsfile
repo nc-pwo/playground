@@ -1,0 +1,7 @@
+@Library('dms-pipeline-shared-libraries') _
+
+dmsBuildmsipeline {
+    agentLabel = 'master'
+    buildToolName = 'Default'
+    skipPublishing = true
+}
