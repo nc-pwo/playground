@@ -80,3 +80,21 @@ dependencies {
     testImplementation 'org.spockframework:spock-core:1.3-groovy-2.5'
     testImplementation 'org.seleniumhq.selenium:selenium-java:3.141.59'
 }
+
+buildscript {
+    ext {
+
+        extPortBindings = ['8080:8080']
+        extContainerName = 'system-subscription-store'
+        extBinds = [:]
+        extDns = []
+        extEnv = "${projectDir}/src/main/properties.env"
+        extFile = file("${buildDir}/containerID.txt")
+        openshiftProjectName = "${rootProject.property('openshiftProject')}"
+        buildImageInputDir = "."
+        buildImageDependsOn = ["bootJar", "createDockerfile"]
+    }
+    dependencies {
+        classpath 'com.netcompany.devops:docker-gradle-plugin:1.6.0'
+    }
+}
