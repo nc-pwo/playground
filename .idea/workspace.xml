@@ -78,8 +78,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/jenkins/build.jenkinsfile">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="200">
-              <caret line="10" column="1" lean-forward="true" selection-start-line="10" selection-start-column="1" selection-end-line="10" selection-end-column="1" />
+            <state>
+              <caret column="50" selection-start-column="50" selection-end-column="50" />
             </state>
           </provider>
         </entry>
@@ -88,10 +88,10 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>dmsBuildmsipeline</find>
       <find>5.1.1</find>
       <find>distributionUrl</find>
       <find>gradleVersion = &quot;5.1.1&quot;</find>
+      <find>dmsBuildmsipeline</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -251,12 +251,12 @@
       <workItem from="1595329599906" duration="725000" />
       <workItem from="1595330921038" duration="46000" />
       <workItem from="1595330972949" duration="4633000" />
-      <workItem from="1595403236835" duration="7127000" />
+      <workItem from="1595403236835" duration="7305000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="12531000" />
+    <option name="totallyTimeSpent" value="12709000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="1912" y="-8" width="1936" height="1176" extended-state="6" />
@@ -330,8 +330,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/jenkins/build.jenkinsfile">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="200">
-          <caret line="10" column="1" lean-forward="true" selection-start-line="10" selection-start-column="1" selection-end-line="10" selection-end-column="1" />
+        <state>
+          <caret column="50" selection-start-column="50" selection-end-column="50" />
         </state>
       </provider>
     </entry>

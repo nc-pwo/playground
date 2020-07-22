@@ -1,3 +1,5 @@
+import nc.devops.shared.library.artifacts.RepoType
+
 @Library('dms-pipeline-shared-libraries@feature/test_branch') _
 
 dmsBuildPipeline  {
