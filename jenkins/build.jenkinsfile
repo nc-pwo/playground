@@ -1,4 +1,4 @@
-@Library('dms-pipeline-shared-libraries') _
+@Library('dms-pipeline-shared-libraries@feature/test_branch') _
 
 dmsBuildmsipeline {
     agentLabel = 'master'
