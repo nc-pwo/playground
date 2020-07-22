@@ -1,7 +1,11 @@
 @Library('dms-pipeline-shared-libraries@feature/test_branch') _
 
-dmsBuildPipeline {
-    agentLabel = 'slave'
-    buildToolName = 'Default'
-    skipPublishing = true
+dmsBuildPipeline  {
+    agentLabel = 'docker'
+    publishingConfig = [
+            credentials : 'artifactory-writer-token',
+            serverId : 'nc-artifactory',
+            repoType : RepoType.ARTIFACTORY,
+            prefixBuildInfoName : 'dms-pwo-dev-local'
+    ]
 }
