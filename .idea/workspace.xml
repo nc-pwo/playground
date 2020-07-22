@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="d0d82f57-b538-49ff-a5aa-4a0249f186f0" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/jenkins/build.jenkinsfile" beforeDir="false" afterPath="$PROJECT_DIR$/jenkins/build.jenkinsfile" afterDir="false" />
-    </list>
+    <list default="true" id="d0d82f57-b538-49ff-a5aa-4a0249f186f0" name="Default Changelist" comment="" />
     <ignored path="$PROJECT_DIR$/classes/" />
     <ignored path="$PROJECT_DIR$/.gradle/" />
     <ignored path="$PROJECT_DIR$/build/" />
@@ -50,13 +48,18 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/jenkins/build.jenkinsfile">
           <provider selected="true" editor-type-id="text-editor">
-            <state>
-              <caret column="59" selection-start-column="59" selection-end-column="59" />
+            <state relative-caret-position="40">
+              <caret line="2" column="16" selection-start-line="2" selection-start-column="16" selection-end-line="2" selection-end-column="16" />
             </state>
           </provider>
         </entry>
       </file>
     </leaf>
+  </component>
+  <component name="FindInProjectRecents">
+    <findStrings>
+      <find>dmsBuildmsipeline</find>
+    </findStrings>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -185,12 +188,12 @@
       <workItem from="1595329599906" duration="725000" />
       <workItem from="1595330921038" duration="46000" />
       <workItem from="1595330972949" duration="4633000" />
-      <workItem from="1595403236835" duration="1588000" />
+      <workItem from="1595403236835" duration="2341000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="6992000" />
+    <option name="totallyTimeSpent" value="7745000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1176" extended-state="6" />
@@ -247,8 +250,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/jenkins/build.jenkinsfile">
       <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret column="59" selection-start-column="59" selection-end-column="59" />
+        <state relative-caret-position="40">
+          <caret line="2" column="16" selection-start-line="2" selection-start-column="16" selection-end-line="2" selection-end-column="16" />
         </state>
       </provider>
     </entry>
