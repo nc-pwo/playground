@@ -1,5 +1,0 @@
-@Library('nc-devops-pipeline-shared-libraries') _
-
-gradleBuildPipeline {
-
-}

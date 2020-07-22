@@ -1,3 +1,0 @@
-openshiftCreateEnvironment{
-    path_yaml = String (path to the yaml file, which contains list of paths to directories - each of those directories contains template.yml file meant for deployment)
-}

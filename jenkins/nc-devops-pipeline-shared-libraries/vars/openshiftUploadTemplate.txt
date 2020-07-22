@@ -1,5 +1,0 @@
-Parameters for this pipeline:
-         path_yaml= String (path to yaml file inside repository (for example nc-devops-jenkins) which contains file path to the tools that have template.yml file -> default value = 'docker-images/openshift/apps.yml')
-         repository_url = String (ssh url for repository where parameters are stored by -> default value = 'nc-devops-jenkins')
-         branch = String (name of branch -> default value = 'master')
-         credentials = String (credentials for repository -> default value = 'nc-devops-credentials')
