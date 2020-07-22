@@ -1,7 +1,7 @@
 @Library('dms-pipeline-shared-libraries@feature/test_branch') _
 
 dmsBuildPipeline {
-    agentLabel = 'master'
+    agentLabel = 'slave'
     buildToolName = 'Default'
     skipPublishing = true
 }
