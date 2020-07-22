@@ -1,8 +1,0 @@
-import org.jenkinsci.plugins.workflow.libs.Library
-
-@Library('nc-devops-pipeline-shared-libraries') _
-
-tfsBpprPipeline {
-    sonarqubeServerKey = 'NC-CENTRALIZED-SONARQUBE'
-    useWrapper = true
-}
