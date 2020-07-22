@@ -8,6 +8,6 @@ dmsBuildPipeline  {
             credentials : 'artifactory-writer-token',
             serverId : 'nc-artifactory',
             repoType : RepoType.ARTIFACTORY,
-            prefixBuildInfoName : 'dms-pwo-dev-local'
+            prefixBuildInfoName : 'ufstdms-maven-dev-local'
     ]
 }
