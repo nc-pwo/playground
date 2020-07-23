@@ -5,6 +5,7 @@ plugins {
     id 'org.unbroken-dome.test-sets' version '3.0.1'
     id "jacoco"
     id "org.sonarqube" version "3.0"
+    // id 'nc.devops.project-gradle-plugin' version '1.0.0'
 }
 group = 'com.github.jitpack'
 
@@ -12,7 +13,7 @@ sourceCompatibility = 1.8 // java 8
 targetCompatibility = 1.8
 
 repositories {
-  mavenCentral()
+    mavenCentral()
 }
 
 task javadocJar(type: Jar, dependsOn: javadoc) {
