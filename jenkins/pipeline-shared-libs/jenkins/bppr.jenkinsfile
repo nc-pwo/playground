@@ -1,6 +1,0 @@
-@Library('dms-pipeline-shared-libraries') _
-
-dmsBpprPipeline {
-    agentLabel = 'master'
-    buildToolName = 'Default'
-}

@@ -1,9 +1,7 @@
-import org.jenkinsci.plugins.workflow.libs.Library
+@Library('dms-pipeline-shared-libraries@feature/test_branch') _
 
-@Library('nc-devops-pipeline-shared-libraries') _
-
-gradleBuildPipeline {
-    sonarqubeServerKey = 'NC-CENTRALIZED-SONARQUBE'
+dmsBuildPipeline {
+    agentLabel = 'slave'
+    buildToolName = 'Default'
     skipPublishing = true
-    useWrapper = true
 }
