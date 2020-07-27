@@ -72,6 +72,26 @@ test {
         html.enabled = true
     }
 }
+
+buildscript {
+    ext {
+
+        extPortBindings = ['8080:8080']
+        extContainerName = 'system-subscription-store'
+        extBinds = [:]
+        extDns = []
+        extEnv = "${projectDir}/src/main/properties.env"
+        extFile = file("${buildDir}/containerID.txt")
+        openshiftProjectName = "${rootProject.property('openshiftProject')}"
+        buildImageInputDir = "${buildDir}"
+        buildImageDependsOn = ["bootJar", "createDockerfile"]
+    }
+    dependencies {
+        classpath 'com.netcompany.devops:docker-gradle-plugin:1.6.0'
+    }
+}
+
+
 dependencies {
     compile 'org.codehaus.groovy:groovy-all:2.3.11'
     compile 'com.google.guava:guava:18.0'
